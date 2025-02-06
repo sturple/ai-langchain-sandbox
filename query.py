@@ -1,6 +1,7 @@
 from langchain.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
-from chains.WebBaseLoader import get_web_base_loader_sample, get_context 
+from loaders.WebBaseLoader import get_web_base_loader_sample, get_context 
+from loaders.DirectoryLoader import get_directory_loader_sample
 from langchain_core.vectorstores import InMemoryVectorStore
 from langchain_ollama import OllamaEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -16,9 +17,16 @@ Answer the question based mostly on the following context:
 Answer the question based on the above context: {question}
 """
 
+PROMPT_TEMPLATE_BP = """
+Answer the question based on the following context:
+{context}
+---
+Answer the question based on the above context: {question}
+"""
+
 
 def main():
-    data = get_context([])
+    data = get_directory_loader_sample()
     vector_store = populate_information(data)
     while (prompt := input("Enter a prompt (q to quit): ")) != "q":
         result = query_rag(prompt, vector_store)
